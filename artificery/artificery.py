@@ -33,11 +33,12 @@ def find_file_in_folder_set(filename, folder_set):
     return found_file
 
 class Artificery():
-    def __init__(self, checkpoint_init=False):
+    def __init__(self, checkpoint_init=False, device='cuda'):
         self.reload_parsers()
         self.param_folders = set()
         self.used_specfiles = []
         self.checkpoint_init = checkpoint_init
+        self.device = device
 
     def parse(self, params_file):
         params_file = os.path.expanduser(params_file)
@@ -56,6 +57,7 @@ class Artificery():
 
         with open(found_file, 'r') as f:
             params = json.load(f)
+            params['device'] = self.device
         self.used_specfiles.append(found_file)
 
         net = self.create_net(params)

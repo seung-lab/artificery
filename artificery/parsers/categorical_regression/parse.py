@@ -6,7 +6,7 @@ class Vectorizer(torch.nn.Module):
                  permute=True, step=None,
                  max_value=None,
                  train_step=False,
-                 device='cpu'):
+                 device='cuda'):
         super(Vectorizer, self).__init__()
 
         if step is not None and max_value is not None:
@@ -23,9 +23,10 @@ class Vectorizer(torch.nn.Module):
         self.norm_method = norm_method
         self.permute = permute
         self.grid = grid
+        self.device = device
 
         if self.grid:
-            x, y = torch.meshgrid([torch.range(0, self.component_channels - 1, device=device,
+            x, y = torch.meshgrid([torch.range(0, self.component_channels - 1, device=self.device,
                                  requires_grad=False)]*2
                                  )
             x = x - self.component_channels//2
@@ -34,7 +35,7 @@ class Vectorizer(torch.nn.Module):
             self.weights = torch.cat((x.unsqueeze(-1), y.unsqueeze(-1)), 2)
             self.weights = self.weights.view(-1, 2)
         else:
-            self.weights = torch.range(0, self.component_channels - 1, device=device,
+            self.weights = torch.range(0, self.component_channels - 1, device=self.device,
                                   requires_grad=False) - self.component_channels//2
             self.weights = self.weights.unsqueeze(-1)
 
@@ -112,6 +113,7 @@ class Vectorizer(torch.nn.Module):
         return result
 
 def parse(params, create_module):
+    device = params.get('device', 'cuda' if torch.cuda.is_available() else 'cpu')
     params = params['arch_desc']
-    net = Vectorizer(**params)
+    net = Vectorizer(**params, device=device)
     return net
