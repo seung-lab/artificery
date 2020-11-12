@@ -1,11 +1,11 @@
 import scalenet
 import six
 
-def parse(params, create_module):
+def parse(params, create_module, batchnorm=True):
     if 'max_level' in params:
         net = scalenet.ScaleNet(max_level=params['max_level'])
     else:
-        net = scalenet.ScaleNet()
+        net = scalenet.ScaleNet(batchnorm=batchnorm)
 
     if "downmodules" in params:
         for level, spec in six.iteritems(params["downmodules"]):

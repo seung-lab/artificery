@@ -33,11 +33,12 @@ def find_file_in_folder_set(filename, folder_set):
     return found_file
 
 class Artificery():
-    def __init__(self, checkpoint_init=False):
+    def __init__(self, checkpoint_init=False, batchnorm=True):
         self.reload_parsers()
         self.param_folders = set()
         self.used_specfiles = []
         self.checkpoint_init = checkpoint_init
+        self.batchnorm = batchnorm
 
     def parse(self, params_file):
         params_file = os.path.expanduser(params_file)
@@ -70,7 +71,7 @@ class Artificery():
 
         elif 'type' in params:
             net_type = params['type'].lower()
-            net = self.parsers[net_type](params, create_module=self.create_net)
+            net = self.parsers[net_type](params, create_module=self.create_net, batchnorm=self.batchnorm)
         else:
             raise Exception("Neither type nor path specified.")
 
