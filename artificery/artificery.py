@@ -71,7 +71,8 @@ class Artificery():
 
         elif 'type' in params:
             net_type = params['type'].lower()
-            net = self.parsers[net_type](params, create_module=self.create_net, batchnorm=self.batchnorm)
+            params['batchnorm'] = self.batchnorm
+            net = self.parsers[net_type](params, create_module=self.create_net)
         else:
             raise Exception("Neither type nor path specified.")
 
