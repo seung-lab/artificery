@@ -34,11 +34,11 @@ def find_file_in_folder_set(filename, folder_set):
 
 class Artificery():
     def __init__(self, checkpoint_init=False, batchnorm=True):
+        self.batchnorm = batchnorm
         self.reload_parsers()
         self.param_folders = set()
         self.used_specfiles = []
         self.checkpoint_init = checkpoint_init
-        self.batchnorm = batchnorm
 
     def parse(self, params_file):
         params_file = os.path.expanduser(params_file)
